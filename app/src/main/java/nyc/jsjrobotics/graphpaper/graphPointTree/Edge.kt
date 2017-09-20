@@ -4,7 +4,7 @@ class Edge<T>(val start: T,
               val end: T?,
               val direction: Direction) {
 
-    fun isEmpty(): Boolean {
+    fun isDeadEnd(): Boolean {
         return end == null
     }
 

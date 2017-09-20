@@ -14,18 +14,21 @@ class GraphPaper
 @JvmOverloads constructor(
         context: Context,
         attrs: AttributeSet? = null,
-        defStyleAttr: Int = 0) : View(context, attrs, defStyleAttr) {
+        defStyleAttr: Int = 0,
+        val drawAllEdges: Boolean = false) : View(context, attrs, defStyleAttr) {
 
     private val horizontalDotsSpan = 10
     private val verticalDotsSpan = 10
     private var horizontalSpacing: Int = 0
     private var verticalSpacing: Int = 0
-    private var currentDrawTo: GraphPoint? = null
+    private var currentDrawFrom: GraphPoint? = null
     private val topLeft: GraphPointNode = GraphPointNode()
-    private val selectedPaint = Paint()
+    private val dotPaint = Paint()
+    private val pathPaint = Paint()
 
     init {
-        selectedPaint.color = 0xFF000033.toInt()
+        dotPaint.color = 0xFFFF8833.toInt()
+        pathPaint.color = 0xFF000000.toInt();
     }
 
 
@@ -37,8 +40,10 @@ class GraphPaper
         topLeft.buildVerticalNodes(verticalDotsSpan, verticalSpacing)
         topLeft.buildHorizontalNodes(horizontalDotsSpan, horizontalSpacing)
         val nodeList: List<GraphPointNode> = topLeft.getSouthernEdges()
-        nodeList.forEach{ it.buildHorizontalNodes(horizontalDotsSpan, horizontalSpacing) }
-        GraphSetup.initNorthSouthEdges(topLeft)
+        nodeList.forEach{
+            it.buildHorizontalNodes(horizontalDotsSpan, horizontalSpacing)
+        }
+        topLeft.getSouthernEdges(true).forEach { GraphSetup.initNorthSouthEdges(it) }
 
     }
 
@@ -66,16 +71,16 @@ class GraphPaper
     }
 
     private fun endDrawTo(event: MotionEvent) {
-        currentDrawTo?.endDrawEvent(event)
+        currentDrawFrom?.endDrawEvent(event)
     }
 
     private fun updateDrawTo(event: MotionEvent) {
-        currentDrawTo?.updateDrawEvent(event)
+        currentDrawFrom?.updateDrawEvent(event)
     }
 
     private fun startDrawTo(startIndex: GraphPointDistance, event: MotionEvent) {
-        currentDrawTo = startIndex.graphPoint
-        currentDrawTo?.addStartEvent(event)
+        currentDrawFrom = startIndex.graphPoint
+        currentDrawFrom?.addStartEvent(event)
     }
 
     private fun findStartPoint(x: Float, y: Float): GraphPointDistance {
@@ -86,9 +91,12 @@ class GraphPaper
     override fun onDraw(canvas: Canvas) {
         val result: ArrayList<GraphPointNode> = arrayListOf()
         topLeft.traverseEastSouth(result)
-        result.forEach{ it.value?.draw(canvas, horizontalSpacing, verticalSpacing)}
-        currentDrawTo?.draw(canvas, horizontalSpacing, verticalSpacing, selectedPaint)
-
+        result.forEach{
+            it.value?.draw(canvas, dotPaint, pathPaint)
+            if (drawAllEdges) {
+                it.drawAllEdges(canvas, pathPaint)
+            }
+        }
     }
 }
 

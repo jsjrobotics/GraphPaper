@@ -31,20 +31,20 @@ fun GraphPointNode.buildHorizontalNodes(horizontalDotsSpan: Int, horizontalSpaci
         horizontalNodes.add(newNode)
     }
 }
-fun GraphPointNode.getNorthernEdges(): List<GraphPointNode> {
-    return getEdges(this, Function{ it.north})
+fun GraphPointNode.getNorthernEdges(inclusive: Boolean = false): List<GraphPointNode> {
+    return getEdges(this, Function{ it.north}, inclusive)
 }
 
-fun GraphPointNode.getEasternEdges(): List<GraphPointNode> {
-    return getEdges(this, Function{ it.east})
+fun GraphPointNode.getEasternEdges(inclusive: Boolean = false): List<GraphPointNode> {
+    return getEdges(this, Function{ it.east}, inclusive)
 }
 
-fun GraphPointNode.getWesternEdges(): List<GraphPointNode> {
-    return getEdges(this, Function{ it.west})
+fun GraphPointNode.getWesternEdges(inclusive: Boolean = false): List<GraphPointNode> {
+    return getEdges(this, Function{ it.west}, inclusive)
 }
 
-fun GraphPointNode.getSouthernEdges(): List<GraphPointNode> {
-    return getEdges(this, Function{ it.south})
+fun GraphPointNode.getSouthernEdges(inclusive: Boolean = false): List<GraphPointNode> {
+    return getEdges(this, Function{ it.south}, inclusive)
 }
 
 fun GraphPointNode.getSouth(steps: Int): GraphPointNode? {
@@ -77,18 +77,24 @@ private fun GraphPointNode.getStepsAway(steps: Int, toEdges: Function<GraphPoint
     return edges[steps-1]
 }
 
-private fun getEdges(topLeft: GraphPointNode,
-                     toEdge: Function<GraphPointNode, Edge<GraphPointNode?>>): List<GraphPointNode> {
+private fun GraphPointNode.getEdges(topLeft: GraphPointNode,
+                     toEdge: Function<GraphPointNode, Edge<GraphPointNode?>>,
+                     inclusive: Boolean = false): List<GraphPointNode> {
     val nodes: ArrayList<GraphPointNode> = arrayListOf()
     var currentNode: GraphPointNode? = topLeft
     do {
         if (currentNode != null){
             val currentEdge = toEdge.apply(currentNode)
-            if (!currentEdge.isEmpty()) {
+            if (!currentEdge.isDeadEnd()) {
                 nodes.add(currentEdge.end!!)
             }
             currentNode = currentEdge.end
         }
     } while (currentNode != null)
+    if (inclusive) {
+        val result: ArrayList<GraphPointNode> = arrayListOf(this)
+        result.addAll(nodes)
+        return result
+    }
     return nodes
 }

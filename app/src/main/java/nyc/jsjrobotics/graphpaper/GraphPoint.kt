@@ -2,34 +2,31 @@ package nyc.jsjrobotics.graphpaper
 
 import android.graphics.Canvas
 import android.graphics.Paint
+import android.graphics.Point
 import android.view.MotionEvent
 
 data class GraphPoint(val x: Float = 0f,
                  val y: Float = 0f) {
     private val dotRadius: Int = 5
-    private val dotPaint = Paint()
-    init {
-        dotPaint.color = 0xFFFF8833.toInt()
-    }
+
+    private val mDrawTo: ArrayList<GraphPoint> = arrayListOf()
 
     fun addStartEvent(event: MotionEvent) {
-        //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        mDrawTo.add(GraphPoint(event.x, event.y))
     }
 
     fun updateDrawEvent(event: MotionEvent) {
-        //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        mDrawTo.clear()
+        mDrawTo.add(GraphPoint(event.x, event.y))
     }
 
     fun endDrawEvent(event: MotionEvent) {
-        //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        mDrawTo.clear()
     }
 
-    fun draw(canvas: Canvas, horizontalSpacing: Int, verticalSpacing: Int) {
+    fun draw(canvas: Canvas, dotPaint: Paint, pathPaint: Paint) {
         canvas.drawCircle(x, y, dotRadius.toFloat(), dotPaint)
-    }
-
-    fun draw(canvas: Canvas, horizontalSpacing: Int, verticalSpacing: Int, paint: Paint) {
-        canvas.drawCircle(x, y, dotRadius.toFloat(), paint)
+        mDrawTo.forEach{ canvas.drawLine(x, y, it.x, it.y, pathPaint)}
     }
 
 }
