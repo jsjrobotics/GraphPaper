@@ -2,10 +2,13 @@ package nyc.jsjrobotics.graphpaper.graphPointTree
 
 import android.graphics.Canvas
 import android.graphics.Paint
-import nyc.jsjrobotics.graphpaper.GraphPoint
+import android.view.MotionEvent
+import nyc.jsjrobotics.graphpaper.view.GraphPoint
 
 
 class GraphPointNode(var value: GraphPoint? = null,
+                     var boundsWidth: Int = 0,
+                     var boundsHeight: Int = 0,
                      north: GraphPointNode? = null,
                      south: GraphPointNode? = null,
                      east: GraphPointNode? = null,
@@ -14,7 +17,7 @@ class GraphPointNode(var value: GraphPoint? = null,
                      southEast: GraphPointNode? = null,
                      northWest: GraphPointNode? = null,
                      southWest: GraphPointNode? = null) {
-
+    private var previousNodes: MutableList<GraphPointNode> = arrayListOf()
     var north: Edge<GraphPointNode?> = Edge.empty(this, Direction.NORTH)
     var south: Edge<GraphPointNode?> = Edge.empty(this, Direction.SOUTH)
     var east: Edge<GraphPointNode?> = Edge.empty(this, Direction.EAST)
@@ -25,7 +28,7 @@ class GraphPointNode(var value: GraphPoint? = null,
     var northEast: Edge<GraphPointNode?> = Edge.empty(this, Direction.NORTH_EAST)
     var southEast: Edge<GraphPointNode?> = Edge.empty(this, Direction.SOUTH_EAST)
 
-    fun traverseEastSouth(resultList: ArrayList<GraphPointNode>) {
+    fun traverseEastSouth(resultList: MutableList<GraphPointNode>) {
         if (resultList.contains(this)) {
             return
         }
@@ -78,7 +81,6 @@ class GraphPointNode(var value: GraphPoint? = null,
         return compareClosestNode(x, y, this)
     }
 
-
     private fun compareClosestNode(x: Float, y: Float, closestNode: GraphPointNode): GraphPointNode {
         var closer = closestNode
         var closestDistance = closer.calculateDistance(x, y)
@@ -112,7 +114,7 @@ class GraphPointNode(var value: GraphPoint? = null,
         return closer
     }
 
-    private fun edges() : List<Edge<GraphPointNode?>>{
+    fun edges() : List<Edge<GraphPointNode?>>{
         return listOf(
                 north,
                 northEast,
@@ -138,15 +140,107 @@ class GraphPointNode(var value: GraphPoint? = null,
         if (value == null) {
             return
         }
-        edges().filter { !it.isDeadEnd()}
-                .map { it.end!! }
-                .filter { it.value != null }
-                .map { it.value!! }
-                .forEach {
+        neighborValues().forEach {
                     val neighborX = it.x
                     val neighborY = it.y
                     canvas.drawLine(value!!.x, value!!.y, neighborX, neighborY, pathPaint )
                 }
+    }
+
+    private fun neighbors(): List<GraphPointNode> {
+        return edges().filter { !it.isDeadEnd()}
+                .map { it.end!! }
+    }
+
+    private fun neighborValues(): List<GraphPoint> {
+        return edges().filter { !it.isDeadEnd()}
+                .map { it.end!! }
+                .filter { it.value != null }
+                .map { it.value!! }
+    }
+
+    fun addStartEvent(event: MotionEvent) {
+        value?.addStartEvent(event)
+    }
+
+    fun addStartEvent(previousNode: GraphPointNode, event: MotionEvent) {
+        previousNodes.add(previousNode)
+        value?.addStartEvent(event)
+    }
+
+    fun endDrawEvent(event: MotionEvent, previousPath: MutableList<GraphPoint>?) : MutableList<GraphPoint> {
+        if (!value!!.isDrawing()){
+            return previousPath ?: mutableListOf()
+        }
+        val path: MutableList<GraphPoint>
+        if (previousPath == null) {
+            path = arrayListOf()
+        } else {
+            path = previousPath
+        }
+        value?.endDrawEvent(event, path)
+        previousNodes.forEach { it.endDrawEvent(event, path) }
+        previousNodes.clear()
+        return path
+    }
+
+    fun updateDrawTo(event: MotionEvent): GraphPointNode {
+        if (!insideDrawingArea(event)) {
+            val neighbor: GraphPointNode = closestNeighbor(event)
+            value?.updateDrawEvent(neighbor.value!!.x, neighbor.value!!.y)
+            neighbor.addStartEvent(this, event)
+            return neighbor
+        } else {
+            value?.updateDrawEvent(event)
+            return this
+        }
+    }
+
+    private fun closestNeighbor(event: MotionEvent): GraphPointNode {
+        val toCheck = neighbors()
+        return toCheck.foldRight(toCheck.get(0), getLowerDistance(event))
+    }
+
+    private fun getLowerDistance(event: MotionEvent): (GraphPointNode, GraphPointNode) -> GraphPointNode {
+        return object : (GraphPointNode, GraphPointNode) -> GraphPointNode {
+            override fun invoke(p1: GraphPointNode, acc: GraphPointNode): GraphPointNode {
+                val p1Distance = p1.calculateDistance(event.x, event.y)
+                val accDistance = acc.calculateDistance(event.x, event.y)
+                if (p1Distance < accDistance) {
+                    return p1
+                }
+                return acc
+            }
+        }
+    }
+
+    private fun insideDrawingArea(event: MotionEvent): Boolean {
+        if (value == null) {
+            throw IllegalArgumentException("No Value")
+        }
+        val xOrigin = value!!.x
+        val yOrigin = value!!.y
+        val left: Float = xOrigin - boundsWidth
+        val top: Float = yOrigin + boundsHeight
+        val right: Float = xOrigin + boundsWidth
+        val bottom: Float = yOrigin - boundsHeight
+        val horizontallyBound = event.x in left..right
+        val verticallyBound = event.y in bottom..top
+        val inside = horizontallyBound && verticallyBound
+        return inside
+    }
+
+    fun setBounds(horizontalSpacing: Int, verticalSpacing: Int) {
+        boundsWidth = horizontalSpacing
+        boundsHeight = verticalSpacing
+    }
+
+    fun clearDrawing(clearedNodes: MutableList<GraphPointNode>) {
+        if (!clearedNodes.contains(this)) {
+            value?.clearDrawing()
+            clearedNodes.add(this)
+            neighbors().forEach { it.clearDrawing(clearedNodes) }
+        }
     }
 
 

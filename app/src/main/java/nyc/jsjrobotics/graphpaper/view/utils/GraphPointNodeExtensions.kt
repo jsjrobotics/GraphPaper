@@ -1,17 +1,18 @@
-package nyc.jsjrobotics.graphpaper
+package nyc.jsjrobotics.graphpaper.utils
 
+import nyc.jsjrobotics.graphpaper.view.GraphPoint
 import nyc.jsjrobotics.graphpaper.graphPointTree.Edge
 import nyc.jsjrobotics.graphpaper.graphPointTree.GraphPointNode
 import java.util.function.Function
 
 
 fun GraphPointNode.buildVerticalNodes(verticalDotsSpan: Int, verticalSpacing: Int) {
-    val verticalNodes: ArrayList<GraphPointNode> = arrayListOf(this)
+    val verticalNodes: MutableList<GraphPointNode> = arrayListOf(this)
     for (yIndex in 1..verticalDotsSpan+1) {
         val xPosition = this.value?.x ?: 0f
         val yPosition = yIndex * verticalSpacing
         val value: GraphPoint = GraphPoint(xPosition, yPosition.toFloat())
-        val newNode: GraphPointNode = GraphPointNode(value)
+        val newNode: GraphPointNode = GraphPointNode(value, boundsWidth = boundsWidth, boundsHeight = boundsHeight)
         val northNode: GraphPointNode = verticalNodes[yIndex-1]
         northNode.setSouth(newNode)
         newNode.setNorth(northNode)
@@ -19,12 +20,12 @@ fun GraphPointNode.buildVerticalNodes(verticalDotsSpan: Int, verticalSpacing: In
     }
 }
 fun GraphPointNode.buildHorizontalNodes(horizontalDotsSpan: Int, horizontalSpacing: Int) {
-    val horizontalNodes: ArrayList<GraphPointNode> = arrayListOf(this)
+    val horizontalNodes: MutableList<GraphPointNode> = arrayListOf(this)
     for (xIndex in 1..horizontalDotsSpan) {
         val xPosition = xIndex * horizontalSpacing
         val yPosition: Float = this.value?.y ?: 0f
         val value: GraphPoint = GraphPoint(xPosition.toFloat(), yPosition)
-        val newNode: GraphPointNode = GraphPointNode(value)
+        val newNode: GraphPointNode = GraphPointNode(value, boundsWidth = boundsWidth, boundsHeight = boundsHeight)
         val westNode: GraphPointNode = horizontalNodes[xIndex-1]
         westNode.setEast(newNode)
         newNode.setWest(westNode)
@@ -80,7 +81,7 @@ private fun GraphPointNode.getStepsAway(steps: Int, toEdges: Function<GraphPoint
 private fun GraphPointNode.getEdges(topLeft: GraphPointNode,
                      toEdge: Function<GraphPointNode, Edge<GraphPointNode?>>,
                      inclusive: Boolean = false): List<GraphPointNode> {
-    val nodes: ArrayList<GraphPointNode> = arrayListOf()
+    val nodes: MutableList<GraphPointNode> = arrayListOf()
     var currentNode: GraphPointNode? = topLeft
     do {
         if (currentNode != null){
@@ -92,7 +93,7 @@ private fun GraphPointNode.getEdges(topLeft: GraphPointNode,
         }
     } while (currentNode != null)
     if (inclusive) {
-        val result: ArrayList<GraphPointNode> = arrayListOf(this)
+        val result: MutableList<GraphPointNode> = arrayListOf(this)
         result.addAll(nodes)
         return result
     }

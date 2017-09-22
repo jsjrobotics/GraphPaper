@@ -1,6 +1,6 @@
-package nyc.jsjrobotics.graphpaper.graphPointTree
+package nyc.jsjrobotics.graphpaper.utils
 
-import nyc.jsjrobotics.graphpaper.getEasternEdges
+import nyc.jsjrobotics.graphpaper.graphPointTree.GraphPointNode
 
 class GraphSetup {
     companion object {

@@ -1,4 +1,6 @@
-package nyc.jsjrobotics.graphpaper
+package nyc.jsjrobotics.graphpaper.dataStructures
+
+import nyc.jsjrobotics.graphpaper.view.GraphPoint
 
 data class GraphPointDistance(val graphPoint: GraphPoint?,
                               val distance: Double) {
