@@ -6,22 +6,29 @@ import android.graphics.Path
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
-import nyc.jsjrobotics.graphpaper.dataStructures.GraphPaperParams
-import nyc.jsjrobotics.graphpaper.graphPointTree.GraphPointNode
-import nyc.jsjrobotics.graphpaper.utils.GraphSetup
-import nyc.jsjrobotics.graphpaper.utils.buildHorizontalNodes
-import nyc.jsjrobotics.graphpaper.utils.buildVerticalNodes
-import nyc.jsjrobotics.graphpaper.utils.getSouthernEdges
+import nyc.jsjrobotics.graphpaper.view.dataStructures.GraphPaperParams
+import nyc.jsjrobotics.graphpaper.view.graphPointTree.GraphPointNode
+import nyc.jsjrobotics.graphpaper.view.utils.GraphSetup
+import nyc.jsjrobotics.graphpaper.view.utils.buildHorizontalNodes
+import nyc.jsjrobotics.graphpaper.view.utils.buildVerticalNodes
+import nyc.jsjrobotics.graphpaper.view.utils.getSouthernEdges
 import java.util.function.Consumer
 
-
-//sets its size based on parent size
+/**
+ * sets its size based on parent size
+ * All params can be set by
+ */
 class GraphPaper
 @JvmOverloads constructor(
         context: Context,
         attrs: AttributeSet? = null,
-        defStyleAttr: Int = 0,
-        val params: GraphPaperParams = GraphPaperParams()) : View(context, attrs, defStyleAttr) {
+        defStyleAttr: Int = 0) : View(context, attrs, defStyleAttr) {
+
+    var params: GraphPaperParams = GraphPaperParams()
+        set(value) {
+            field = value
+            requestLayout()
+        }
 
     private var drawAllEdges: Boolean = params.drawAllEdges
     private var handleEventHistory: Boolean = params.handleEventHistory

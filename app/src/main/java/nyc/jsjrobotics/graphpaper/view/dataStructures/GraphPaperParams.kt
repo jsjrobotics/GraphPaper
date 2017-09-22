@@ -1,4 +1,4 @@
-package nyc.jsjrobotics.graphpaper.dataStructures
+package nyc.jsjrobotics.graphpaper.view.dataStructures
 
 import android.graphics.Paint
 
@@ -20,8 +20,8 @@ class GraphPaperParams(var useRelativeSpacing: Boolean = false,
                        var coverBackground: Boolean = true,
                        var drawAllEdges: Boolean = false,
                        var handleEventHistory: Boolean = false,
-                       private var dotPaintColor: Int = 0xFFFF8833.toInt(),
-                       private var paintPathColor: Int = 0xFF000000.toInt()) {
+                       dotPaintColor: Int = 0xFFFF8833.toInt(),
+                       paintPathColor: Int = 0xFF000000.toInt()) {
     val dotPaint = Paint()
     val pathPaint = Paint()
     var horizontalSpacing: Int private set

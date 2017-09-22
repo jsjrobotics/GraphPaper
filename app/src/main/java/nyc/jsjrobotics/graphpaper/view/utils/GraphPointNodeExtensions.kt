@@ -1,8 +1,8 @@
-package nyc.jsjrobotics.graphpaper.utils
+package nyc.jsjrobotics.graphpaper.view.utils
 
 import nyc.jsjrobotics.graphpaper.view.GraphPoint
-import nyc.jsjrobotics.graphpaper.graphPointTree.Edge
-import nyc.jsjrobotics.graphpaper.graphPointTree.GraphPointNode
+import nyc.jsjrobotics.graphpaper.view.graphPointTree.Edge
+import nyc.jsjrobotics.graphpaper.view.graphPointTree.GraphPointNode
 import java.util.function.Function
 
 
@@ -79,8 +79,8 @@ private fun GraphPointNode.getStepsAway(steps: Int, toEdges: Function<GraphPoint
 }
 
 private fun GraphPointNode.getEdges(topLeft: GraphPointNode,
-                     toEdge: Function<GraphPointNode, Edge<GraphPointNode?>>,
-                     inclusive: Boolean = false): List<GraphPointNode> {
+                                    toEdge: Function<GraphPointNode, Edge<GraphPointNode?>>,
+                                    inclusive: Boolean = false): List<GraphPointNode> {
     val nodes: MutableList<GraphPointNode> = arrayListOf()
     var currentNode: GraphPointNode? = topLeft
     do {

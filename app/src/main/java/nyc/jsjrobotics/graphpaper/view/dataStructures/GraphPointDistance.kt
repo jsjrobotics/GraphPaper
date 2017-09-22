@@ -1,4 +1,4 @@
-package nyc.jsjrobotics.graphpaper.dataStructures
+package nyc.jsjrobotics.graphpaper.view.dataStructures
 
 import nyc.jsjrobotics.graphpaper.view.GraphPoint
 
