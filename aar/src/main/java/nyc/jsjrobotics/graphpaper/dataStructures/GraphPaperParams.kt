@@ -19,11 +19,12 @@ class GraphPaperParams(var useRelativeSpacing: Boolean = false,
                        verticalDotsSpan: Int = 10,
                        var coverBackground: Boolean = true,
                        var drawAllEdges: Boolean = false,
+                       var drawDots: Boolean = false,
                        var handleEventHistory: Boolean = false,
                        dotPaintColor: Int = 0xFFFF8833.toInt(),
                        paintPathColor: Int = 0xFF000000.toInt()) {
-    val dotPaint = Paint()
-    val pathPaint = Paint()
+    var dotPaint = Paint()
+    var pathPaint = Paint()
     var horizontalSpacing: Int private set
     var verticalSpacing: Int private set
     var horizontalDotsSpan: Int private set

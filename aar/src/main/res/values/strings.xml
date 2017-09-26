@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">GraphPaperView</string>
+    <string name="increase_size">Increase Style</string>
+    <string name="decrease_size">Decrease Style</string>
+    <string name="save_sketches">Save Sketches</string>
+    <string name="clear_sketches">Clear Sketches</string>
 </resources>

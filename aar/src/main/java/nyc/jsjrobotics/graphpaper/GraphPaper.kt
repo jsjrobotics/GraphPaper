@@ -2,10 +2,11 @@ package nyc.jsjrobotics.graphpaper
 
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Paint
 import android.graphics.Path
+import android.support.v7.app.AlertDialog
 import android.util.AttributeSet
-import android.view.MotionEvent
-import android.view.View
+import android.view.*
 import nyc.jsjrobotics.graphpaper.dataStructures.GraphPaperParams
 import nyc.jsjrobotics.graphpaper.graphPointTree.GraphPointNode
 import nyc.jsjrobotics.graphpaper.utils.GraphSetup
@@ -13,6 +14,9 @@ import nyc.jsjrobotics.graphpaper.utils.buildHorizontalNodes
 import nyc.jsjrobotics.graphpaper.utils.buildVerticalNodes
 import nyc.jsjrobotics.graphpaper.utils.getSouthernEdges
 import java.util.function.Consumer
+import android.widget.FrameLayout
+import android.widget.Toast
+
 
 /**
  * sets its size based on parent size
@@ -24,13 +28,32 @@ class GraphPaper
         attrs: AttributeSet? = null,
         defStyleAttr: Int = 0) : View(context, attrs, defStyleAttr) {
 
+    val gestureDetector = GestureDetector(object : GestureDetector.SimpleOnGestureListener() {
+        override fun onLongPress(e: MotionEvent) {
+            val dialogView = ChangeGraphPaperParamsView(context)
+            val dialog = AlertDialog.Builder(context).setView(dialogView.root).create()
+            dialog.show()
+        }
+    })
+
     var params: GraphPaperParams = GraphPaperParams()
         set(value) {
             field = value
             requestLayout()
         }
 
-    private var drawAllEdges: Boolean = params.drawAllEdges
+    var drawAllEdges: Boolean = params.drawAllEdges
+        set(value) {
+            field = value
+            invalidate()
+        }
+
+    var drawDots: Boolean = params.drawDots
+        set(value) {
+            field = value
+            invalidate()
+        }
+
     private var handleEventHistory: Boolean = params.handleEventHistory
     private var currentDrawing: GraphPaperDrawing? = null
     private val topLeft: GraphPointNode = GraphPointNode()
@@ -65,9 +88,14 @@ class GraphPaper
     private var lastPath: Path? = null
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
+        val gestureDetected = gestureDetector.onTouchEvent(event)
+        if (gestureDetected) {
+            return true
+        }
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
                 parent.requestDisallowInterceptTouchEvent(true)
+
                 startDrawTo(event)
                 invalidate()
 
@@ -121,10 +149,17 @@ class GraphPaper
         currentDrawing = GraphPaperDrawing(event, topLeft)
     }
 
+    fun setPathPaint(paint: Paint) {
+        params.pathPaint = paint
+    }
+
+    fun setDotPaint(paint: Paint) {
+        params.dotPaint = paint
+    }
 
     override fun onDraw(canvas: Canvas) {
         val result: MutableList<GraphPointNode> = arrayListOf()
-        val dotPaint = params.dotPaint
+        val dotPaint = if (drawDots) params.dotPaint else null
         val pathPaint = params.pathPaint
         topLeft.traverseEastSouth(result)
         result.forEach{
@@ -138,35 +173,3 @@ class GraphPaper
         }
     }
 }
-
-class GraphPaperDrawing(startEvent: MotionEvent,
-                        val topLeft: GraphPointNode) {
-
-    var currentNode: GraphPointNode;
-    val startGraphPoint: GraphPoint;
-    var endGraphPoint: GraphPoint? = null
-    var finalPath: List<GraphPoint>? = null
-
-    init {
-        startGraphPoint = GraphPoint(startEvent.x, startEvent.y)
-        currentNode = findStartPoint(topLeft, startGraphPoint)
-        currentNode.addStartEvent(startEvent)
-    }
-
-    fun updateDrawTo(event: MotionEvent) {
-        currentNode = currentNode.updateDrawTo(event)
-    }
-
-    fun endDrawEvent(event: MotionEvent, previousPath: MutableList<GraphPoint>?) {
-        finalPath = currentNode.endDrawEvent(event, previousPath).reversed()
-        endGraphPoint = GraphPoint(event.x, event.y)
-    }
-
-    companion object {
-        private fun findStartPoint(startNode: GraphPointNode, point: GraphPoint): GraphPointNode {
-            return startNode.getClosestNode(point.x, point.y)
-        }
-    }
-
-}
-

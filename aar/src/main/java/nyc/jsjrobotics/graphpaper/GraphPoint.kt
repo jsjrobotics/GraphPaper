@@ -37,9 +37,15 @@ data class GraphPoint(val x: Float = 0f,
         return mDrawTo.isNotEmpty()
     }
 
-    fun draw(canvas: Canvas, dotPaint: Paint, pathPaint: Paint) {
-        canvas.drawCircle(x, y, dotRadius.toFloat(), dotPaint)
-        mDrawTo.forEach{ canvas.drawLine(x, y, it.x, it.y, pathPaint)}
+    fun draw(canvas: Canvas,
+             dotPaint: Paint?,
+             pathPaint: Paint?) {
+        if (dotPaint != null) {
+            canvas.drawCircle(x, y, dotRadius.toFloat(), dotPaint)
+        }
+        if (pathPaint != null) {
+            mDrawTo.forEach { canvas.drawLine(x, y, it.x, it.y, pathPaint) }
+        }
     }
 
     fun clearDrawing() {
