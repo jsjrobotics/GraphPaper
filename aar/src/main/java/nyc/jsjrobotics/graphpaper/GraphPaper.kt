@@ -1,4 +1,4 @@
-package nyc.jsjrobotics.graphpaper.view
+package nyc.jsjrobotics.graphpaper
 
 import android.content.Context
 import android.graphics.Canvas
@@ -6,12 +6,12 @@ import android.graphics.Path
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
-import nyc.jsjrobotics.graphpaper.view.dataStructures.GraphPaperParams
-import nyc.jsjrobotics.graphpaper.view.graphPointTree.GraphPointNode
-import nyc.jsjrobotics.graphpaper.view.utils.GraphSetup
-import nyc.jsjrobotics.graphpaper.view.utils.buildHorizontalNodes
-import nyc.jsjrobotics.graphpaper.view.utils.buildVerticalNodes
-import nyc.jsjrobotics.graphpaper.view.utils.getSouthernEdges
+import nyc.jsjrobotics.graphpaper.dataStructures.GraphPaperParams
+import nyc.jsjrobotics.graphpaper.graphPointTree.GraphPointNode
+import nyc.jsjrobotics.graphpaper.utils.GraphSetup
+import nyc.jsjrobotics.graphpaper.utils.buildHorizontalNodes
+import nyc.jsjrobotics.graphpaper.utils.buildVerticalNodes
+import nyc.jsjrobotics.graphpaper.utils.getSouthernEdges
 import java.util.function.Consumer
 
 /**
@@ -67,6 +67,7 @@ class GraphPaper
     override fun onTouchEvent(event: MotionEvent): Boolean {
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
+                parent.requestDisallowInterceptTouchEvent(true)
                 startDrawTo(event)
                 invalidate()
 
@@ -76,6 +77,7 @@ class GraphPaper
                 invalidate()
             }
             MotionEvent.ACTION_UP -> {
+                parent.requestDisallowInterceptTouchEvent(false)
                 val drawing: GraphPaperDrawing = endDrawTo(event)
                 onDrawCallback?.accept(drawing)
                 invalidate()

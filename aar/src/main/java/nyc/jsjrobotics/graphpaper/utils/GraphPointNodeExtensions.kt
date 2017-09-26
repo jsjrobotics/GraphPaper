@@ -1,8 +1,8 @@
-package nyc.jsjrobotics.graphpaper.view.utils
+package nyc.jsjrobotics.graphpaper.utils
 
-import nyc.jsjrobotics.graphpaper.view.GraphPoint
-import nyc.jsjrobotics.graphpaper.view.graphPointTree.Edge
-import nyc.jsjrobotics.graphpaper.view.graphPointTree.GraphPointNode
+import nyc.jsjrobotics.graphpaper.GraphPoint
+import nyc.jsjrobotics.graphpaper.graphPointTree.Edge
+import nyc.jsjrobotics.graphpaper.graphPointTree.GraphPointNode
 import java.util.function.Function
 
 

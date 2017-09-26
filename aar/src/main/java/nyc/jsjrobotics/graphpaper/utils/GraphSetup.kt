@@ -1,6 +1,6 @@
-package nyc.jsjrobotics.graphpaper.view.utils
+package nyc.jsjrobotics.graphpaper.utils
 
-import nyc.jsjrobotics.graphpaper.view.graphPointTree.GraphPointNode
+import nyc.jsjrobotics.graphpaper.graphPointTree.GraphPointNode
 
 class GraphSetup {
     companion object {

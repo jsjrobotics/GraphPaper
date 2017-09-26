@@ -1,4 +1,4 @@
-package nyc.jsjrobotics.graphpaper.view.graphPointTree
+package nyc.jsjrobotics.graphpaper.graphPointTree
 
 enum class Direction {
     NORTH,

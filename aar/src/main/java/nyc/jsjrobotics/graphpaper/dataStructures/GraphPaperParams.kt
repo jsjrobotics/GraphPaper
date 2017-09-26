@@ -1,4 +1,4 @@
-package nyc.jsjrobotics.graphpaper.view.dataStructures
+package nyc.jsjrobotics.graphpaper.dataStructures
 
 import android.graphics.Paint
 

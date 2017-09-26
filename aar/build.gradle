@@ -1,0 +1,79 @@
+version '0.2'
+
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'com.jfrog.artifactory'
+apply plugin: 'maven-publish'
+
+android {
+  compileSdkVersion 26
+  buildToolsVersion "26.0.1"
+
+
+  defaultConfig {
+    minSdkVersion 24
+    targetSdkVersion 26
+    versionCode 1
+    versionName "1.0"
+
+    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+  }
+
+  buildTypes {
+    release {
+      minifyEnabled false
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+    }
+  }
+}
+
+artifactory {
+  publish {
+    contextUrl = "${ceeyaArtifactoryHost}"
+    repository {
+      repoKey = "${ceeyaRepoName}"
+      username = "${ceeyaArtifactoryUsername}"
+      password = "${ceeyaArtifactoryPassword}"
+      maven = true
+
+    }
+    defaults {
+      // Tell the Artifactory Plugin which artifacts should be published to Artifactory.
+      publications('aar')
+      publishArtifacts = true
+
+      // Publish generated POM files to Artifactory (true by default)
+      publishPom = true
+    }
+  }
+}
+
+publishing {
+  publications {
+    aar(MavenPublication) {
+      groupId 'nyc.spookyrobotics'
+      artifactId 'graphpaper'
+      version "$version"
+
+      artifact("$buildDir/outputs/aar/${project.getName()}-release.aar")
+    }
+  }
+}
+
+afterEvaluate {
+  artifactoryPublish.dependsOn 'generatePomFileForAarPublication'
+}
+
+dependencies {
+  implementation fileTree(dir: 'libs', include: ['*.jar'])
+  implementation 'com.android.support:appcompat-v7:26.1.0'
+  testImplementation 'junit:junit:4.12'
+  androidTestImplementation('com.android.support.test.espresso:espresso-core:3.0.1', {
+    exclude group: 'com.android.support', module: 'support-annotations'
+  })
+  compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+}
+repositories {
+  mavenCentral()
+}
+

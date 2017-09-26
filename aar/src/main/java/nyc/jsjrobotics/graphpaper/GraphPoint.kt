@@ -1,4 +1,4 @@
-package nyc.jsjrobotics.graphpaper.view
+package nyc.jsjrobotics.graphpaper
 
 import android.graphics.Canvas
 import android.graphics.Paint
@@ -8,7 +8,7 @@ data class GraphPoint(val x: Float = 0f,
                  val y: Float = 0f) {
     private val dotRadius: Int = 5
 
-    private val mDrawTo: MutableList<GraphPoint> = arrayListOf()
+    private val mDrawTo: MutableList<GraphPoint> = mutableListOf()
 
     fun addStartEvent(event: MotionEvent) {
         // Note we add the start event coordinates for this graph point not the event

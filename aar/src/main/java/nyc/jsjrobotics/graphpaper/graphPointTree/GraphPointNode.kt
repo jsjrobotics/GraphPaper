@@ -1,9 +1,9 @@
-package nyc.jsjrobotics.graphpaper.view.graphPointTree
+package nyc.jsjrobotics.graphpaper.graphPointTree
 
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.view.MotionEvent
-import nyc.jsjrobotics.graphpaper.view.GraphPoint
+import nyc.jsjrobotics.graphpaper.GraphPoint
 
 
 class GraphPointNode(var value: GraphPoint? = null,
