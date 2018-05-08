@@ -159,13 +159,13 @@ class GraphPointNode(var value: GraphPoint? = null,
                 .map { it.value!! }
     }
 
-    fun addStartEvent(event: MotionEvent) {
-        value?.addStartEvent(event)
+    fun addStartEvent() {
+        value?.addStartEvent()
     }
 
-    fun addStartEvent(previousNode: GraphPointNode, event: MotionEvent) {
+    fun addStartEvent(previousNode: GraphPointNode) {
         previousNodes.add(previousNode)
-        value?.addStartEvent(event)
+        value?.addStartEvent()
     }
 
     fun endDrawEvent(event: MotionEvent, previousPath: MutableList<GraphPoint>?) : MutableList<GraphPoint> {
@@ -188,7 +188,7 @@ class GraphPointNode(var value: GraphPoint? = null,
         if (!insideDrawingArea(event)) {
             val neighbor: GraphPointNode = closestNeighbor(event)
             value?.updateDrawEvent(neighbor.value!!.x, neighbor.value!!.y)
-            neighbor.addStartEvent(this, event)
+            neighbor.addStartEvent(this)
             return neighbor
         } else {
             value?.updateDrawEvent(event)

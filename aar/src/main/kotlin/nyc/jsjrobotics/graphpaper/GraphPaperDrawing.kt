@@ -14,7 +14,7 @@ class GraphPaperDrawing(startEvent: MotionEvent,
     init {
         startGraphPoint = GraphPoint(startEvent.x, startEvent.y)
         currentNode = findStartPoint(topLeft, startGraphPoint)
-        currentNode.addStartEvent(startEvent)
+        currentNode.addStartEvent()
     }
 
     fun updateDrawTo(event: MotionEvent) {

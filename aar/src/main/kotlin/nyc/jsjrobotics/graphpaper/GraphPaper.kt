@@ -28,7 +28,7 @@ class GraphPaper
         attrs: AttributeSet? = null,
         defStyleAttr: Int = 0) : View(context, attrs, defStyleAttr) {
 
-    val gestureDetector = GestureDetector(object : GestureDetector.SimpleOnGestureListener() {
+    val gestureDetector = GestureDetector(context, object : GestureDetector.SimpleOnGestureListener() {
         override fun onLongPress(e: MotionEvent) {
             val dialogView = ChangeGraphPaperParamsView(context)
             val dialog = AlertDialog.Builder(context).setView(dialogView.root).create()
@@ -39,6 +39,8 @@ class GraphPaper
     var params: GraphPaperParams = GraphPaperParams()
         set(value) {
             field = value
+            drawAllEdges = params.drawAllEdges
+            drawDots = params.drawDots
             requestLayout()
         }
 

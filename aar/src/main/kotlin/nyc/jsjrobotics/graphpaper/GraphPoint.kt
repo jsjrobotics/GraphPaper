@@ -10,7 +10,7 @@ data class GraphPoint(val x: Float = 0f,
 
     private val mDrawTo: MutableList<GraphPoint> = mutableListOf()
 
-    fun addStartEvent(event: MotionEvent) {
+    fun addStartEvent() {
         // Note we add the start event coordinates for this graph point not the event
         mDrawTo.add(GraphPoint(x, y))
     }

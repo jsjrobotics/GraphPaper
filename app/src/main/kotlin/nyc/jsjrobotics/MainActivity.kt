@@ -27,7 +27,8 @@ class MainActivity : AppCompatActivity() {
                 horizontalSpacing = 50,
                 verticalSpacing = 50,
                 horizontalDotsSpan = 20,
-                verticalDotsSpan = 20)
+                verticalDotsSpan = 20,
+                drawDots = true)
     }
 
     private fun buildPathCallback(): Consumer<GraphPaperDrawing> {

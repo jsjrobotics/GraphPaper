@@ -3,7 +3,7 @@ package nyc.jsjrobotics.graphpaper.dataStructures
 import android.graphics.Paint
 
 /***
- * Class to initalize graph paper.
+ * Class to initialize graph paper.
  * If use relative spacing is true, horizontalFixedSpacing and verticalFixedSpacing are ignored and
  * dot width = view width / horizontalDotsSpan.
  *
@@ -23,16 +23,19 @@ class GraphPaperParams(var useRelativeSpacing: Boolean = false,
                        var handleEventHistory: Boolean = false,
                        dotPaintColor: Int = 0xFFFF8833.toInt(),
                        paintPathColor: Int = 0xFF000000.toInt()) {
-    var dotPaint = Paint()
-    var pathPaint = Paint()
+    var dotPaint = Paint().apply {
+        color = dotPaintColor
+    }
+    var pathPaint = Paint().apply {
+        color = paintPathColor
+    }
+
     var horizontalSpacing: Int private set
     var verticalSpacing: Int private set
     var horizontalDotsSpan: Int private set
     var verticalDotsSpan: Int private set
 
     init {
-        dotPaint.color = dotPaintColor
-        pathPaint.color = paintPathColor
         this.horizontalSpacing = horizontalSpacing
         this.verticalSpacing = verticalSpacing
         this.horizontalDotsSpan = horizontalDotsSpan

@@ -7,12 +7,12 @@ apply plugin: 'maven-publish'
 
 android {
   compileSdkVersion 26
-  buildToolsVersion "26.0.1"
+  buildToolsVersion '27.0.3'
 
 
   defaultConfig {
-    minSdkVersion 24
-    targetSdkVersion 26
+    minSdkVersion 23
+    targetSdkVersion 23
     versionCode 1
     versionName "1.0"
 
@@ -24,6 +24,12 @@ android {
       minifyEnabled false
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
+  }
+
+  sourceSets {
+    main.java.srcDirs += 'src/main/kotlin'
+    androidTest.java.srcDirs += 'src/androidTest/kotlin'
+    test.java.srcDirs += 'src/test/kotlin'
   }
 }
 
@@ -71,7 +77,7 @@ dependencies {
   androidTestImplementation('com.android.support.test.espresso:espresso-core:3.0.1', {
     exclude group: 'com.android.support', module: 'support-annotations'
   })
-  compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+  implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }
 repositories {
   mavenCentral()
