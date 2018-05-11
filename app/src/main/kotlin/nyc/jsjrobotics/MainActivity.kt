@@ -23,10 +23,8 @@ class MainActivity : AppCompatActivity() {
 
         private fun buildGraphParams(): PaperParams.RelativeSpacingParam {
             return PaperParams.RelativeSpacingParam().apply {
-                    useRelativeSpacing = true
                     horizontalDotsSpan = 8
                     verticalDotsSpan = 8
-                    drawDots = true
             }
         }
 

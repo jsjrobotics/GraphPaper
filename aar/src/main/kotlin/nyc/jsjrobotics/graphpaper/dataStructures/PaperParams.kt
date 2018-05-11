@@ -50,20 +50,12 @@ sealed class PaperParams(val drawAllEdges: Boolean = false,
                                                                          verticalSpacing = verticalSpacing,
                                                                          horizontalDotsSpan = horizontalDotsSpan,
                                                                          verticalDotsSpan = verticalDotsSpan) {
-        var coverBackground: Boolean = true
+        var dotPositionsSpecified: List<FloatPoint> = emptyList()
 
         override fun calculateSpacing(width: Int, height: Int) {
             horizontalDotsSpan = width / horizontalSpacing
             verticalDotsSpan = height / verticalSpacing
 
-            if (coverBackground) {
-                while (horizontalSpacing * horizontalDotsSpan < width) {
-                    horizontalDotsSpan += 1
-                }
-                while (verticalSpacing * verticalDotsSpan < height) {
-                    verticalDotsSpan += 1
-                }
-            }
         }
 
     }

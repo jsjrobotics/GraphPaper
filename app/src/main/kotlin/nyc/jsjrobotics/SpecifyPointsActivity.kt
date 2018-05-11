@@ -6,7 +6,8 @@ import android.util.Log
 import nyc.jsjrobotics.graphpaper.GraphPaper
 import nyc.jsjrobotics.graphpaper.GraphPaperDrawing
 import nyc.jsjrobotics.graphpaper.dataStructures.FloatPoint
-import nyc.jsjrobotics.graphpaper.dataStructures.RelativeSpacingParam
+import nyc.jsjrobotics.graphpaper.dataStructures.PaperParams
+import nyc.jsjrobotics.graphpaper.dataStructures.PaperParams.AbsoluteSpacingParam
 import java.util.function.Consumer
 
 class SpecifyPointsActivity : AppCompatActivity() {
@@ -30,8 +31,8 @@ class SpecifyPointsActivity : AppCompatActivity() {
         setContentView(view)
     }
 
-    private fun buildGraphParams(): RelativeSpacingParam {
-        return RelativeSpacingParam().apply {
+    private fun buildGraphParams(): PaperParams {
+        return AbsoluteSpacingParam().apply {
             dotPositionsSpecified = pointList.map { FloatPoint(it.first, it.second) }
         }
     }
