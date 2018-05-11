@@ -7,15 +7,13 @@ import android.graphics.Path
 import android.support.v7.app.AlertDialog
 import android.util.AttributeSet
 import android.view.*
-import nyc.jsjrobotics.graphpaper.dataStructures.GraphPaperParams
+import nyc.jsjrobotics.graphpaper.dataStructures.PaperParams
 import nyc.jsjrobotics.graphpaper.graphPointTree.GraphPointNode
 import nyc.jsjrobotics.graphpaper.utils.GraphSetup
 import nyc.jsjrobotics.graphpaper.utils.buildHorizontalNodes
 import nyc.jsjrobotics.graphpaper.utils.buildVerticalNodes
 import nyc.jsjrobotics.graphpaper.utils.getSouthernEdges
 import java.util.function.Consumer
-import android.widget.FrameLayout
-import android.widget.Toast
 
 
 /**
@@ -36,7 +34,7 @@ class GraphPaper
         }
     })
 
-    var params: GraphPaperParams = GraphPaperParams()
+    var params: PaperParams = PaperParams.RelativeSpacingParam()
         set(value) {
             field = value
             drawAllEdges = params.drawAllEdges

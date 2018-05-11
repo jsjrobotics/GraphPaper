@@ -5,8 +5,9 @@ import android.graphics.Paint
 import android.view.MotionEvent
 
 data class GraphPoint(val x: Float = 0f,
-                 val y: Float = 0f) {
-    private val dotRadius: Int = 5
+                 val y: Float = 0f,
+                      private val dotRadius: Int = 5) {
+
 
     private val mDrawTo: MutableList<GraphPoint> = mutableListOf()
 
